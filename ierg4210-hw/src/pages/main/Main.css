@@ -15,6 +15,14 @@
 
 }
 
+.product_card_thumbnailLink {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: .25rem;
+}
+
 .product_card_img {
     width: 100%;
     height: 100%;

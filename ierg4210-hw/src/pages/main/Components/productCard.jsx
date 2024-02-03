@@ -9,7 +9,9 @@ const ProductCard = ({ name, price, productId }) => {
 
   return (
     <div className="product_card">
-      <img src={ReactIcon} className="product_card_img" alt="thumbnail" />
+      <Link to={`/product/${productId}`} className="product_card_thumbnailLink">
+        <img src={ReactIcon} className="product_card_img" alt="thumbnail" />
+      </Link>
       <div className="product_card_description">
         <Link to={`/product/${productId}`}>
           <h4 className="product_card_title">{name}</h4>

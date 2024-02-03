@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom"
 import ProductList from "../../data/ProductList"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import './Product.css'
 
 const Product = () => {
     const { productId } = useParams()
@@ -8,7 +9,7 @@ const Product = () => {
     const [productName, setProductName] = useState('')
     const [productPrice, setProductPrice] = useState('')
     const [productImg, setProductImg] = useState('')
-    // const [productDescription, setProductDescription] = useState('')
+    const [productDescription, setProductDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget quam in est tincidunt aliquam. Donec et libero sed orci luctus fermentum. Nullam sit amet dui et odio tempus fermentum.")
     // const [productCategory, setProductCategory] = useState('')
     // const [productStock, setProductStock] = useState('')
     const [addCartNumber, setAddCartNumber] = useState(1)
@@ -23,6 +24,31 @@ const Product = () => {
         setProductImg(product.img)
     }, [productId])
 
+    const handleMinusCartNumber = () => {
+        if (parseInt(addCartNumber) === 1) {
+            setAddCartNumber(1)
+            return
+        }
+        setAddCartNumber(prev => parseInt(prev) - 1)
+    }
+
+    const handlePlueCartNumber = () => {
+        if (parseInt(addCartNumber) === 100) {
+            setAddCartNumber(100)
+            return
+        }
+        setAddCartNumber(prev => parseInt(prev) + 1)
+    }
+
+    const handleInputCardNumber = (e) => {
+        const intEvt = parseInt(e.target.value)
+        if (intEvt >= 100) {
+            setAddCartNumber(100)
+            return
+        }
+        setAddCartNumber(intEvt)
+    }
+
   return (
     <div>
         <div className="productDetail_container">
@@ -31,13 +57,30 @@ const Product = () => {
             </div>
             <div className="productDetail_info">
                 <h1>{productName}</h1>
-                <p>${productPrice}</p>
+                <p className="productDetail_info_price">${productPrice}</p>
+                <p className="productDetail_info_descriptions">{productDescription}</p>
                 <div className="productDetail_addCart">
-                    <button onClick={() => setAddCartNumber(addCartNumber - 1)}>-</button>
-                    <p>{addCartNumber}</p>
-                    <button onClick={() => setAddCartNumber(addCartNumber + 1)}>+</button>
+                    <div className="productDetail_addCartNum">
+                        <button onClick={handleMinusCartNumber} className={addCartNumber <= 1 && 'productDetail_addCartNum_disabled'}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
+                            </svg>
+                        </button>
+                        <input 
+                            type="number" 
+                            value={addCartNumber} 
+                            onChange={handleInputCardNumber} 
+                            min={1}
+                            max={100}
+                        />
+                        <button onClick={handlePlueCartNumber} className={addCartNumber >= 100 && "productDetail_addCartNum_disabled"}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <button>Add to Cart</button>
                 </div>
-                <button>Add to Cart</button>
             </div>
         </div>
     </div>
