@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
-import ReactIcon from "../../../assets/react.svg";
 import PropTypes from "prop-types";
+import { addToCart } from "../../../features/cart/cartSlice";
+import { useDispatch } from "react-redux";
 
-const ProductCard = ({ name, price, productId }) => {
-  const addToCart = () => {
-    console.log("add to cart");
+const ProductCard = ({ name, price, productId, img }) => {
+
+  const dispatch = useDispatch();
+  const handleAddToCart = () => {
+    dispatch(addToCart({ name, price, productId, img }));
   };
 
   return (
     <div className="product_card">
       <Link to={`/product/${productId}`} className="product_card_thumbnailLink">
-        <img src={ReactIcon} className="product_card_img" alt="thumbnail" />
+        <img src={img} className="product_card_img" alt="thumbnail" />
       </Link>
       <div className="product_card_description">
         <Link to={`/product/${productId}`}>
@@ -18,7 +21,7 @@ const ProductCard = ({ name, price, productId }) => {
         </Link>
         <p className="product_card_price">${price}</p>
       </div>
-      <button onClick={addToCart} className="product_card_addCart">
+      <button onClick={handleAddToCart} className="product_card_addCart">
         Add to Cart
       </button>
     </div>
@@ -28,7 +31,8 @@ const ProductCard = ({ name, price, productId }) => {
 ProductCard.propTypes = {
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
-    productId: PropTypes.string.isRequired
+    productId: PropTypes.string.isRequired,
+    img: PropTypes.string.isRequired
   };
 
 export default ProductCard;

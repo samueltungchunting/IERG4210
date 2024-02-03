@@ -81,6 +81,8 @@
     cursor: pointer;
     background: transparent;
     color: #000;
+    display: flex;
+    align-items: center;
 }
 
 .productDetail_addCartNum > button > svg {
