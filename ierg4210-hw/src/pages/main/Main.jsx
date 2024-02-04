@@ -10,9 +10,7 @@ function Main() {
 
   return (
     <>
-      <div className=''>
         <Gallery />
-      </div>
     </>
   )
 }

@@ -13,6 +13,7 @@ const Product = () => {
     // const [productCategory, setProductCategory] = useState('')
     // const [productStock, setProductStock] = useState('')
     const [addCartNumber, setAddCartNumber] = useState(1)
+    const [inventory, setInventory] = useState(0)
 
 
     useEffect(() => {
@@ -22,6 +23,7 @@ const Product = () => {
         setProductName(product.name)
         setProductPrice(product.price)
         setProductImg(product.img)
+        setInventory(product.stock)
     }, [productId])
 
     const handleMinusCartNumber = () => {
@@ -50,7 +52,7 @@ const Product = () => {
     }
 
   return (
-    <div>
+    <div className="productDetail_layout">
         <div className="productDetail_container">
             <div className="productDetail_img">
                 <img src={productImg} alt="product" />
@@ -59,6 +61,13 @@ const Product = () => {
                 <h1>{productName}</h1>
                 <p className="productDetail_info_price">${productPrice}</p>
                 <p className="productDetail_info_descriptions">{productDescription}</p>
+                <div className="productDetail_info_inventory">
+                    {inventory <= 3 ? 
+                        <p className="productDetail_info_stock_less">Only {inventory} left!</p> 
+                        : 
+                        <p className="productDetail_info_stock">Inventory: {inventory}</p>
+                    }
+                </div>
                 <div className="productDetail_addCart">
                     <div className="productDetail_addCartNum">
                         <button onClick={handleMinusCartNumber} className={addCartNumber <= 1 && 'productDetail_addCartNum_disabled'}>

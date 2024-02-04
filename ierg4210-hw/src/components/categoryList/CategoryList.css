@@ -1,0 +1,23 @@
+.category_list {
+    background-color: #d7e9ff;
+    /* background-color: #d0d0d0ed; */
+    padding: 1rem;
+    font-size: 16px;
+    min-height: 100vh;
+    list-style-type: none;
+
+    grid-column: span 1 / span 1;
+}
+
+.category_list > h2 {
+    margin-bottom: .5rem;
+}
+
+.category_list > li {
+    line-height: 2.25rem;
+}
+
+.category_list > li:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

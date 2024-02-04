@@ -52,3 +52,26 @@ input[type=number] {
     background-color: #ffffff;
   }
 } */
+
+.layout {
+}
+
+.navigation_order {
+  background: white;
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, .3); */
+  box-shadow: 0 6px 8px -2px rgba(0, 0, 0, .1);
+  padding: 0rem 2rem 0.5rem 2rem;
+  font-weight: 500;
+}
+
+.navigation_order > a {
+  text-decoration: none;
+  color: #151515;
+  transition: all 0.3s;
+  text-decoration: underline;
+}
+
+.layout_section {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
