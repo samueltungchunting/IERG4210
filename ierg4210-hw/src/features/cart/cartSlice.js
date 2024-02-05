@@ -43,6 +43,7 @@ const cartSlice = createSlice({
             state.totalItems -= 1;
         },
         addToCartByQuantity: (state, action) => {
+            // so many bugs here
             const productExist = state.productList.find((product) => {
                 return product.productId === action.payload.productId
             })
@@ -54,9 +55,12 @@ const cartSlice = createSlice({
                     img: action.payload.img,
                     quantity: action.payload.quantity
                 });
+                // some bugs here
                 state.totalPrice += action.payload.price * parseInt(action.payload.quantity);
+                state.totalItems += parseInt(action.payload.quantity);
             } else {
-                productExist.quantity = parseInt(action.payload.quantity);
+                // some bugs here
+                productExist.quantity += parseInt(action.payload.quantity);
                 state.totalPrice += productExist.price * productExist.quantity;
             }
         }

@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom"
 import ProductList from "../../data/ProductList"
 import { useEffect, useState } from "react"
 import './Product.css'
+import { useDispatch } from "react-redux"
+import { addToCartByQuantity } from "../../features/cart/cartSlice"
 
 const Product = () => {
     const { productId } = useParams()
@@ -9,12 +11,13 @@ const Product = () => {
     const [productName, setProductName] = useState('')
     const [productPrice, setProductPrice] = useState('')
     const [productImg, setProductImg] = useState('')
-    const [productDescription, setProductDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget quam in est tincidunt aliquam. Donec et libero sed orci luctus fermentum. Nullam sit amet dui et odio tempus fermentum.")
+    const [productDescription, setProductDescription] = useState("")
     // const [productCategory, setProductCategory] = useState('')
     // const [productStock, setProductStock] = useState('')
     const [addCartNumber, setAddCartNumber] = useState(1)
     const [inventory, setInventory] = useState(0)
 
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const product = ProductList.find((product) => {
@@ -24,6 +27,7 @@ const Product = () => {
         setProductPrice(product.price)
         setProductImg(product.img)
         setInventory(product.stock)
+        setProductDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget quam in est tincidunt aliquam. Donec et libero sed orci luctus fermentum. Nullam sit amet dui et odio tempus fermentum.")
     }, [productId])
 
     const handleMinusCartNumber = () => {
@@ -49,6 +53,16 @@ const Product = () => {
             return
         }
         setAddCartNumber(intEvt)
+    }
+
+    const handleAddToCartByQuantity = () => {
+        dispatch(addToCartByQuantity({
+            productId: productId,
+            name: productName,
+            price: productPrice,
+            img: productImg,
+            quantity: addCartNumber
+        }))
     }
 
   return (
@@ -88,7 +102,7 @@ const Product = () => {
                             </svg>
                         </button>
                     </div>
-                    <button>Add to Cart</button>
+                    <button onClick={handleAddToCartByQuantity}>Add to Cart</button>
                 </div>
             </div>
         </div>
