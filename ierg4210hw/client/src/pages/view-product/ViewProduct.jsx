@@ -36,12 +36,6 @@ const ViewProduct = () => {
                     <AddIcon />
                 </button>
             </Link>
-            <Link to={`/add-catagory`}>
-                <button>
-                    Add Category
-                    <AddIcon/>
-                </button>
-            </Link>
         </div>
         {allProductList && allProductList.map((product) => {
             return (
