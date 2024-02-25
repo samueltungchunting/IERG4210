@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const CatagorySchema = new Schema({
-    cid: mongoose.Schema.Types.ObjectId,
+    cid: Number,
     name: String,  
 })
 

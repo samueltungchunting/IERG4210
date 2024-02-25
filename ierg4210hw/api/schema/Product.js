@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const ProductSchema = new Schema({
-    pid: mongoose.Schema.Types.ObjectId,
-    cid: {type: mongoose.Schema.Types.ObjectId, ref: "Catagory"},
+    pid: Number,
+    cid: {type: Number, ref: "Catagory"},
     name: String,
     price: Number,
     description: String,
