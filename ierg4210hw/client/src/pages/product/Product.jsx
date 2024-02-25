@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom"
-import ProductList from "../../data/ProductList"
 import { useEffect, useState } from "react"
 import './Product.css'
 import { useDispatch } from "react-redux"
 import { addToCartByQuantity } from "../../features/cart/cartSlice"
+import axios from "axios"
 
 const Product = () => {
+    console.log("productId");
     const { productId } = useParams()
 
     const [productName, setProductName] = useState('')
@@ -20,14 +21,16 @@ const Product = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        const product = ProductList.find((product) => {
-            return product.productId === productId
+        axios.get(`/product/get_product/${productId}`).then((res) => {
+            const { name, price, stock, description, photos } = res.data
+            setProductName(name)
+            setProductPrice(price)
+            setInventory(stock)
+            setProductDescription(description)
+            if(photos.length !== 0) {
+                setProductImg(photos)
+            }
         })
-        setProductName(product.name)
-        setProductPrice(product.price)
-        setProductImg(product.img)
-        setInventory(product.stock)
-        setProductDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget quam in est tincidunt aliquam. Donec et libero sed orci luctus fermentum. Nullam sit amet dui et odio tempus fermentum.")
     }, [productId])
 
     const handleMinusCartNumber = () => {
@@ -69,7 +72,7 @@ const Product = () => {
     <div className="productDetail_layout">
         <div className="productDetail_container">
             <div className="productDetail_img">
-                <img src={productImg} alt="product" />
+                {productImg && <img src={productImg} alt="product" />}
             </div>
             <div className="productDetail_info">
                 <h1>{productName}</h1>

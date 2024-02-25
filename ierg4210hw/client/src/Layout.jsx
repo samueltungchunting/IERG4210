@@ -2,33 +2,31 @@ import { Link, Outlet, useParams } from 'react-router-dom'
 import './index.css'
 import CategoryList from './components/categoryList/CategoryList'
 import Navbar from './components/navbar/Navbar'
-import ProductList from './data/ProductList'
+// import ProductList from './data/ProductList'
 
 const Layout = () => {
     const { productId } = useParams()
     return (
         <div className='layout'>
             <Navbar />
-            <p className='navigation_order'>
-                <Link to={'/'}>
+            <div className='navigation_order'>
+                <Link to={'/'} className='navigation_order_link'>
                     Home
                 </Link>
-                <span>{' > '}</span>
-                <Link to={'/fruits'}>
-                    Fruits
-                </Link>
                 {productId && (
-                    <>
+                    <div className='navigation_order_sub'>
                         <span>{' > '}</span>
-                        <Link to={`/product/${productId}`}>
-                            {ProductList[productId-1].name}
-                        </Link>
-                    </>
+                        <Link to={`/product/${productId}`} className='navigation_order_link'>Product {productId}</Link>
+                    </div>
                 )}
-            </p>
+            </div>
             <section className='layout_section'>
-                <CategoryList />
-                <Outlet />
+                <div className='layout_section_catagoryList'>
+                    <CategoryList />
+                </div>
+                <div className='layout_section_content'>
+                    <Outlet />
+                </div>
             </section>
         </div>
     )

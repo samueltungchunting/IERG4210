@@ -6,7 +6,7 @@
     min-height: 100vh;
     list-style-type: none;
 
-    grid-column: span 1 / span 1;
+    /* grid-column: span 1 / span 1; */
 }
 
 .category_list > h2 {
@@ -20,4 +20,10 @@
 .category_list > li:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.category_list > li > a {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
 }

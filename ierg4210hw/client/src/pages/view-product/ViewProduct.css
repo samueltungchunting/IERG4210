@@ -1,0 +1,93 @@
+.admin_view_products_page {
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
+
+.add_product_catagory {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.add_product_catagory > a {
+    text-decoration: none;
+    color: #222;
+}
+
+.add_product_catagory > a > button {
+    background-color: #DDD;
+    border: none;
+    cursor: pointer;
+    padding: .5rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .25rem;
+}
+
+.add_product_catagory > a > button > svg {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.admin_view_products_card {
+    width: 90%;
+    border-radius: 12px;
+    padding: .5rem;
+    display: flex;
+    background: #DDD;
+    gap: 1rem;
+}
+
+.admin_view_products_card_img {
+    height: 6rem;
+    width: 6rem;
+    display: flex;
+    flex-shrink: 0;
+}
+
+.admin_view_products_card_img > img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: .5rem;
+}
+
+.name_price {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.name_price > h4 {
+    color: var(--text-red);
+}
+
+.admin_view_btn {
+    margin-right: auto;
+    display: flex;
+    gap: .4rem;
+}
+
+.admin_view_action_btn {
+    padding: 4px 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #444;
+    border-radius: .4rem;
+    cursor: pointer;
+    width: 64px;
+}
+
+.admin_view_delete_btn {
+    background: #f09292;
+}
+
+.admin_view_edit_btn {
+    background: #fffdbd;
+}

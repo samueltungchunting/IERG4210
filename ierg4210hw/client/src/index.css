@@ -62,16 +62,37 @@ input[type=number] {
   box-shadow: 0 6px 8px -2px rgba(0, 0, 0, .1);
   padding: 0rem 2rem 0.5rem 2rem;
   font-weight: 500;
+
+  display: flex;
 }
 
-.navigation_order > a {
+.navigation_order_link {
   text-decoration: none;
   color: #151515;
   transition: all 0.3s;
   text-decoration: underline;
 }
 
+.navigation_order_sub {
+  display: flex;
+}
+
+.navigation_order_sub > span {
+  margin-left: .25rem;
+  margin-right: .25rem;
+}
+
 .layout_section {
   display: grid;
+  justify-content: center;
   grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.layout_section_catagoryList {
+  grid-column: span 1 / span 1;
+}
+
+.layout_section_content {
+  /* display: grid; */
+  grid-column: span 4 / span 4;
 }
