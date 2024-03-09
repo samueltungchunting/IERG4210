@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
+const CatagoryModel = require('./Catagory');
 
 const ProductSchema = new Schema({
     pid: Number,

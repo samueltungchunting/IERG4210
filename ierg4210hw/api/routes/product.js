@@ -49,7 +49,7 @@ router.get('/get_product/:pid', async (req, res) => {
     if (!pid) {
         return res.status(400).json({ msg: "Invalid pid" });
     }
-    const product = await ProductModel.findOne({ pid: parseInt(pid) });
+    const product = await ProductModel.findOne({ pid: parseInt(pid) }).populate('cid');
     if (product.photos.length === 0) {
         return res.json(product);
     }

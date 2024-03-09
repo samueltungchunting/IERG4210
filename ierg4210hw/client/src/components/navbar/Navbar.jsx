@@ -2,29 +2,37 @@ import { useDispatch, useSelector } from "react-redux";
 import "./Navbar.css";
 import { removeFromCart, addToCart, addToCartByQuantity } from "../../features/cart/cartSlice";
 import { Link } from "react-router-dom";
+import CartProduct from "./components/cart-product";
+import { useEffect } from "react";
 
 const Navbar = () => {
-
     const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.totalItems);
     const cartTotalPrice = useSelector((state) => state.cart.totalPrice);
     const cartList = useSelector((state) => state.cart.productList);
 
-    const handleOnQuantityChange = (e, productId) => {
-        const quantity = parseInt(e.target.value);
-        if (isNaN(quantity) || quantity === null || quantity === undefined || quantity === 0 || quantity === "") {
+    useEffect(() => {
+        const localStorageCart = cartList.map((item) => {
+            return {
+                productId: item.productId,
+                quantity: item.quantity
+            }
+        })
+        console.log(localStorageCart);
+        localStorage.setItem("cart", JSON.stringify(localStorageCart));
+    }, [cartList])
+
+    const handleOnQuantityChange = (ev, productId) => {
+        const tempQuantity = ev.target.value;
+        console.log(typeof(tempQuantity));
+        if (tempQuantity === null || tempQuantity === undefined || parseInt(tempQuantity) === 0 || tempQuantity === "") {
+            dispatch(removeFromCart({productId: productId}))
             return;
         }
-        // if (quantity > 100) {
-        //     dispatch(addToCartByQuantity({
-        //         productId: productId,
-        //         quantity: 100
-        //     }))
-        //     return;
-        // }
+
         dispatch(addToCartByQuantity({
             productId: productId,
-            quantity: parseInt(quantity)
+            quantity: parseInt(tempQuantity)
         }))
     }
 
@@ -53,29 +61,17 @@ const Navbar = () => {
                     {cartList.map((item) => {
                         const {productId, name, price, quantity, img} = item;
                         return (
-                            <div key={productId} className="navbar_cart_item">
-                                <div className="navbar_cart_item_thumb">
-                                    <img src={img} alt={name} />
-                                </div>
-                                <div className="navbar_cart_item_detail">
-                                    <h4>{name}</h4>
-                                    <div className="navbar_cart_item_detail_num">
-                                        <button onClick={() => handleMinusQuantity(productId)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
-                                            </svg>
-                                        </button>
-                                        {/* <input type="number" value={quantity} onChange={() => handleOnQuantityChange(productId)}/> */}
-                                        <input type="number" value={quantity} onChange={(ev) => handleOnQuantityChange(ev, productId)}/>
-                                        <button onClick={() => handlePlusQuantity(productId)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <p className="navbar_cart_item_detail_price">${parseInt(price)*quantity}</p>
-                                </div>
-                            </div>                        
+                            <CartProduct
+                                key={productId}
+                                productId={productId}
+                                name={name}
+                                price={price}
+                                quantity={quantity}
+                                img={img}
+                                handleOnQuantityChange={handleOnQuantityChange}
+                                handleMinusQuantity={handleMinusQuantity}
+                                handlePlusQuantity={handlePlusQuantity}
+                            />
                         )
                     })}
                 </div>

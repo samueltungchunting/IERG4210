@@ -6,7 +6,7 @@ import { Form, Formik, Field } from 'formik';
 
 const AddCatagory = () => {
   return (
-    123123123123
+    <p>No use of this component in the project</p>
     // <div className="addCatagory_page">
     //     <Formik
     //         initialValues={initialFormValues}

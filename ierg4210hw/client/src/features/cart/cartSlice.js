@@ -56,17 +56,30 @@ const cartSlice = createSlice({
                     quantity: action.payload.quantity
                 });
                 // some bugs here
-                state.totalPrice += action.payload.price * parseInt(action.payload.quantity);
-                state.totalItems += parseInt(action.payload.quantity);
+                // state.totalPrice += action.payload.price * parseInt(action.payload.quantity);
+                // state.totalItems += parseInt(action.payload.quantity);
+                state.totalPrice = state.productList.map(product => product.price * product.quantity).reduce((acc, current) => acc + current, 0);
+                state.totalItems = state.productList.map(product => product.quantity).reduce((acc, current) => acc + current, 0);
             } else {
                 // some bugs here
-                productExist.quantity += parseInt(action.payload.quantity);
-                state.totalPrice += productExist.price * productExist.quantity;
+                productExist.quantity = parseInt(action.payload.quantity);
+                state.totalPrice = state.productList.map(product => product.price * product.quantity).reduce((acc, current) => acc + current, 0);
+                state.totalItems = state.productList.map(product => product.quantity).reduce((acc, current) => acc + current, 0);
             }
-        }
+        },
+        initializeCartFromLocalStorage: (state) => {
+            // Update the state with data from local storage
+            const localStorageCart = JSON.parse(localStorage.getItem('cart')) || [];
+            state.productList = localStorageCart;
+            state.totalItems = localStorageCart.reduce((total, item) => total + item.quantity, 0);
+            state.totalPrice = calculateTotalPrice(localStorageCart);
+          },
     }
 })
 
+const calculateTotalPrice = (cart) => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+};
 
-export const { addToCart, removeFromCart, addToCartByQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, addToCartByQuantity, initializeCartFromLocalStorage } = cartSlice.actions;
 export default cartSlice.reducer;
