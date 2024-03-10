@@ -10,8 +10,6 @@ import { useSearchParams } from 'react-router-dom'
 function Main() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [allProductList, setAllProductList] = useState([])
-
-  console.log(searchParams.get('cid'));
   const cid = searchParams.get('cid')
 
   useEffect(() => {

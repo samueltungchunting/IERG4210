@@ -2,11 +2,10 @@ import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import './Product.css'
 import { useDispatch } from "react-redux"
-import { addToCartByQuantity } from "../../features/cart/cartSlice"
+import { addToCartByProductPageQuantity } from "../../features/cart/cartSlice"
 import axios from "axios"
 
 const Product = () => {
-    console.log("productId");
     const { productId } = useParams()
 
     const [productName, setProductName] = useState('')
@@ -59,8 +58,8 @@ const Product = () => {
     }
 
     const handleAddToCartByQuantity = () => {
-        dispatch(addToCartByQuantity({
-            productId: productId,
+        dispatch(addToCartByProductPageQuantity({
+            productId: parseInt(productId),
             name: productName,
             price: productPrice,
             img: productImg,
@@ -79,7 +78,7 @@ const Product = () => {
                 <p className="productDetail_info_price">${productPrice}</p>
                 <p className="productDetail_info_descriptions">{productDescription}</p>
                 <div className="productDetail_info_inventory">
-                    {inventory <= 3 ? 
+                    {inventory <= 3 ?
                         <p className="productDetail_info_stock_less">Only {inventory} left!</p> 
                         : 
                         <p className="productDetail_info_stock">Inventory: {inventory}</p>

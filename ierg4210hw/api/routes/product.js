@@ -49,7 +49,7 @@ router.get('/get_product/:pid', async (req, res) => {
     if (!pid) {
         return res.status(400).json({ msg: "Invalid pid" });
     }
-    const product = await ProductModel.findOne({ pid: parseInt(pid) }).populate('cid');
+    const product = await ProductModel.findOne({ pid: parseInt(pid) });
     if (product.photos.length === 0) {
         return res.json(product);
     }
@@ -94,5 +94,18 @@ router.delete('/delete_product/:pid', async (req, res) => {
     await deleteFileFromS3(fileName)
     res.json({msg: "Product deleted"});
 })
+
+router.get('/get_product_detail_from_localstorage/:productId', async (req, res) => {
+    const { productId } = req.params;
+    const product = await ProductModel.findOne({pid: productId});
+
+    const firstPhoto = product.photos[0];
+    await getFileFromS3(firstPhoto).then((url) => {
+        product.photos[0] = url;
+    })
+
+    res.json(product);
+})
+
 
 module.exports = router;

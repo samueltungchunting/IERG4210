@@ -1,25 +1,43 @@
-import { Link, Outlet, useParams } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import './index.css'
 import CategoryList from './components/categoryList/CategoryList'
 import Navbar from './components/navbar/Navbar'
 // import ProductList from './data/ProductList'
+import { useSearchParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
+
 
 const Layout = () => {
-    const { productId } = useParams()
+    const [searchParams] = useSearchParams()
+    const cid = searchParams.get('cid')
+
+    let categoryName = ''; // Declare categoryName outside the if statement
+
+    const categoryDetail = useSelector((state) =>
+        state.category.categoryList.find((category) => category.cid === parseInt(cid))
+    );
+
+    if (categoryDetail) {
+        categoryName = categoryDetail.name;
+    }
+
     return (
         <div className='layout'>
             <Navbar />
+
             <div className='navigation_order'>
                 <Link to={'/'} className='navigation_order_link'>
                     Home
                 </Link>
-                {productId && (
+                {cid && categoryName && (
                     <div className='navigation_order_sub'>
                         <span>{' > '}</span>
-                        <Link to={`/product/${productId}`} className='navigation_order_link'>Product {productId}</Link>
+                        <span>{categoryName}</span>
                     </div>
                 )}
             </div>
+
             <section className='layout_section'>
                 <div className='layout_section_catagoryList'>
                     <CategoryList />
@@ -33,10 +51,3 @@ const Layout = () => {
 }
 
 export default Layout
-
-        {/* 
-          missing:
-            3-display error of total price in shopping cart ****
-            4-product detail page add cart function
-            5- xx>yy>zz
-        */}

@@ -14,24 +14,32 @@ import Button from '@mui/material/Button';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import { useSearchParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 const AddProduct = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const pid = searchParams.get('pid')
 
+    const categoryList = useSelector((state) => state.category.categoryList)
+
     const [catagory, setCatagory] = useState('')
     const [initialFormValues, setInitialFormValues] = useState(null)
     const [image, setImage] = useState(null)
     const [uploadedImage, setUploadedImage] = useState(null)
-    
 
-    console.log(pid);
+
     useEffect(() => {
         if (pid) {
             axios.get(`/product/get_product/${pid}`).then((res) => {
-                const {catagory, name, price, photos, description, stock} = res.data
+                const {cid, name, price, photos, description, stock} = res.data
+                const category = categoryList.find((cat) => cat.cid === cid)
+                // console.log(photos);
+                // !!!!!!!!!!!!!!!!!!
+                // here will be some error where the photo link is not the same, 
+                // suppose is a 32bit name but if fetch like this then it will be a s3 link
+                // !!!!!!!!!!!!!!!!!!
                 setInitialFormValues({
-                    catagory: '',
+                    catagory: category.name,
                     name: name,
                     price: price,
                     photo: photos[0],
@@ -53,7 +61,7 @@ const AddProduct = () => {
         axios.get('/catagory/get_catagories').then((res) => {
             setCatagory(res.data)
         })
-    }, [pid])
+    }, [pid, categoryList])
 
 
     const onDrop = useCallback((acceptedFiles) => {

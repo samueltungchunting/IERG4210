@@ -19,7 +19,7 @@
 }
 
 .add_product_catagory > a > button {
-    background-color: #DDD;
+    background-color: var(--sky-bule);
     border: none;
     cursor: pointer;
     padding: .5rem 1rem;
@@ -68,7 +68,7 @@
 }
 
 .admin_view_btn {
-    margin-right: auto;
+    margin-left: auto;
     display: flex;
     gap: .4rem;
 }
