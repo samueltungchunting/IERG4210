@@ -9,8 +9,8 @@ import ViewProduct from "./pages/view-product/ViewProduct"
 // import EditViewProduct from "./pages/view-product/EditViewProduct"
 import AddCatagory from "./pages/add-catagory/AddCatagory"
 
-axios.defaults.baseURL = "https://s15.ierg4210.ie.cuhk.edu.hk:4000"
-// axios.defaults.baseURL = "https://localhost:4000"
+axios.defaults.baseURL = "http://s15.ierg4210.ie.cuhk.edu.hk:4000"
+// axios.defaults.baseURL = "http://localhost:4000"
 axios.defaults.withCredentials = true
 
 

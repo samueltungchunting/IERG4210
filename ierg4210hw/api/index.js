@@ -20,7 +20,7 @@ app.use(express.json());
 const DevMode = process.env.DEV_MODE
 
 app.use(cors({
-    origin: DevMode === "DEV" ? ['http://localhost:3000'] : ['http://52.64.102.124', 'http://s15.ierg4210.ie.cuhk.edu.hk'],
+    origin: DevMode === "DEV" ? ['http://localhost:3000'] : ['http://52.64.102.124', 'https://s15.ierg4210.ie.cuhk.edu.hk', 'https://secure.s15.ierg4210.ie.cuhk.edu.hk'],
     credentials: true
 }));
 
