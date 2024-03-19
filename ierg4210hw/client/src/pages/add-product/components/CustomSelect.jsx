@@ -10,7 +10,6 @@ const CustomSelect = ({ label, ...props }) => {
     // console.log(meta, "<-- meta");
 
     return (
-        // <div className='customSelect'>
         <FormControl fullWidth>
             <InputLabel key={field.name}>{props.placeholder}</InputLabel>
             <Select
@@ -21,7 +20,6 @@ const CustomSelect = ({ label, ...props }) => {
                 {props.children}
             </Select>
         </FormControl>
-        // </div>
     )
 }
 
