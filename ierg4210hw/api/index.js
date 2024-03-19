@@ -38,7 +38,7 @@ app.get('/helloindex', async (req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route to handle the request for the text file
-app.get('/.well-known/pki-validation/secure_textfile/AF6264F6298A321FED6DA700698A6355.txt', (req, res) => {
+app.get('/.well-known/pki-validation/AF6264F6298A321FED6DA700698A6355.txt', (req, res) => {
   // Set the content type as plain text
   res.set('Content-Type', 'text/plain');
 
