@@ -16,12 +16,11 @@ const catagoryRoutes = require('./routes/catagory');
 
 app.use(express.json());
 // app.use(bodyParser.json());
+
+const DevMode = process.env.DEV_MODE
+
 app.use(cors({
-    // origin: 'http://localhost:3000',
-    origin: (origin, callback) => {
-        // Allow any origin
-        callback(null, true);
-    },
+    origin: DevMode === "DEV" ? ['http://localhost:3000'] : ['http://52.64.102.124', 'http://s15.ierg4210.ie.cuhk.edu.hk'],
     credentials: true
 }));
 
@@ -33,11 +32,6 @@ app.use('/product', productRoutes);
 app.use('/catagory', catagoryRoutes);
 
 app.get('/helloindex', async (req, res) => {
-    // const addedCatagory = await CatagoryModel.create({
-    //     cid: 386,
-    //     name: "Snacks"
-    // });
-    // res.json(addedCatagory);
     res.json({msg: "Hello from index.js"});
 })
 
