@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -19,6 +23,20 @@
   --text-red: #fd2604;
   --text-blue: #3f5ab6;
   --text-black: #151515;
+
+  --primary-50: #f2f8fe;
+  --primary-75: #dfedfd;
+  --primary-100:#d4eaf7;
+  --primary-200:#b6ccd8;
+  --primary-300:#3b3c3d;
+  --secondary-100:#71c4ef;
+  --secondary-200:#0d7aa1;
+  --text-100:#1d1c1c;
+  --text-200:#313d44;
+  --bg-100:#fffefb;
+  --bg-200:#f5f4f1;
+  --bg-300:#dbdad8;
+  --confirm-green: #35b37e;
 }
 
 * {
