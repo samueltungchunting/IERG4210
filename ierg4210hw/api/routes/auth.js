@@ -39,19 +39,23 @@ router.post('/register', async(req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    const isExistUser = await UserModel.findOne({ email: email });
-    if (!isExistUser) {
+    const exsitingUser = await UserModel.findOne({ email: email });
+    if (!exsitingUser) {
         return res.status(400).json({ msg: "User does not exist" })
     }
     try {
-        const isPasswordCorrect = await bcrypt.compare(password, isExistUser.password)
+        const isPasswordCorrect = await bcrypt.compare(password, exsitingUser.password)
         if(!isPasswordCorrect) {
             return res.status(401).json({ error
                 : 'Invalid username or password' });
         }
 
+        const userInfo = {
+            email: exsitingUser.email,
+            username: exsitingUser.username,
+        }
         const csrfToken = req.csrfToken();
-        res.cookie('auth', csrfToken, {
+        res.cookie('auth', JSON.stringify({csrfToken, userInfo}), {
             httpOnly: true,
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
             maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days in milliseconds
@@ -72,5 +76,19 @@ router.post('/change_password', async(req, res) => {
 router.get('/get_csrfToken', async(req, res) => {
     res.json({ csrfToken: req.csrfToken() });
 })
+
+
+router.get('/logout', async(req, res) => {})
+
+
+router.get('/get_user_profile', async(req, res) => {
+    const auth = req.cookies.auth;
+    if (!auth) {
+        return res.status(401).json({ msg: "Not logged in" });
+    }
+    const { userInfo } = JSON.parse(auth);
+    return res.json(userInfo);
+})
+
 
 module.exports = router;

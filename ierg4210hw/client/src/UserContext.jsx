@@ -11,7 +11,8 @@ export function UserContextProvider({children}) { // using this function to wrap
     useEffect(() => {
       // console.log("idk why user is null...", user);
       if(!user) {
-        axios.get('/profile').then(({data}) => {
+        axios.get('/auth/get_user_profile').then(({data}) => {
+            // console.log(data, 123); // an object
         //   const { name } = data
           setUser(data)
           setReady(true)

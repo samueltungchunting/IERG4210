@@ -1,20 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Alert, Snackbar } from "@mui/material";
 import { Form, Formik } from "formik";
 import { loginFormValidationSchema } from "./components/ValidationSchema";
 import LoginFormTextField from "./components/loginFormTextField";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../../UserContext";
 
 const Login = () => {
   const [loginFail, setLoginFail] = useState(false);
   const [csrfToken, setCSRFToken] = useState("");
+
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     axios.get('/auth/get_csrfToken').then((res) => {
       setCSRFToken(res.data.csrfToken);
     });
   }, [])
+
+  if (user) {
+    console.log("User is already logged in");
+    return <Navigate to="/" />;
+  }
 
   const loginFormInitialValue = {
     email: "",
@@ -25,8 +33,13 @@ const Login = () => {
     values._csrf = csrfToken;
     // console.log(values);
     const res = await axios.post("/auth/login", values);
-    
-    console.log(res);
+    if (res.status === 200) {
+      setUser(res.data);
+      console.log(res);
+      return;
+    } else {
+      setLoginFail(true);
+    }
   };
 
   const handleForgotPassword = async () => {

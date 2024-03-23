@@ -3,13 +3,16 @@ import "./Navbar.css";
 import { removeFromCart, addToCart, addToCartByQuantity } from "../../features/cart/cartSlice";
 import { Link } from "react-router-dom";
 import CartProduct from "./components/cart-product";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { UserContext } from "../../UserContext";
 
 const Navbar = () => {
     const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.totalItems);
     const cartTotalPrice = useSelector((state) => state.cart.totalPrice);
     const cartList = useSelector((state) => state.cart.productList);
+
+    const {user, ready} = useContext(UserContext);
 
     useEffect(() => {
         const localStorageCart = cartList.map((item) => {
@@ -46,6 +49,12 @@ const Navbar = () => {
   return (
     <nav className="navbar">
         <h1 className="navbar_title">IERG Shop</h1>
+
+        {user  && ready &&
+            <div>
+                <p className="nav_user">Welcome, {user.email}</p>
+            </div>
+        }
 
         <div className="nav_user">
             <Link to={'/add-product'}>
