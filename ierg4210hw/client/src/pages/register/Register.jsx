@@ -25,7 +25,6 @@ const Register = () => {
   };
 
   const registerFormInitialValue = {
-    role: "Student",
     username: "",
     email: "",
     password: "",

@@ -10,15 +10,22 @@ const PORT = 4000;
 require('dotenv').config();
 const path = require('path');
 
+// middleware / routes
 const cors = require('cors');
 const productRoutes = require('./routes/product');
 const catagoryRoutes = require('./routes/catagory');
+const authRoutes = require('./routes/auth');
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
+const cookieParser = require('cookie-parser');
+
 
 app.use(express.json());
-// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(csrfProtection);
 
 const DevMode = process.env.DEV_MODE
-
 app.use(cors({
     // origin: DevMode === "DEV" ? ['http://localhost:3000'] : ['http://52.64.102.124', 'https://s15.ierg4210.ie.cuhk.edu.hk', 'https://secure.s15.ierg4210.ie.cuhk.edu.hk'],
     origin: (origin, callback) => {
@@ -29,11 +36,14 @@ app.use(cors({
 
 mongoose.connect(process.env.MONGO_URL)
 
-
 // APIs
 app.use('/product', productRoutes);
 app.use('/catagory', catagoryRoutes);
+app.use('/auth', authRoutes);
 
+
+
+// API routes here
 app.get('/helloindex', async (req, res) => {
     res.json({msg: "Hello from index.js"});
 })
