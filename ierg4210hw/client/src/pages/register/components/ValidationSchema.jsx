@@ -9,6 +9,5 @@ export const signupFormValidationSchema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is required"),
-  role: Yup.string().required("Role is required"),
-  CSRFToken: Yup.string(),
+  // CSRFToken: Yup.string(),
 });

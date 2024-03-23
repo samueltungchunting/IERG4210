@@ -14,21 +14,26 @@ router.post('/register', async(req, res) => {
     // if (req.csrfToken() !== req.body._csrf) {
     //     return res.status(403).send('Invalid CSRF token');
     // }
-    const { email, username, password } = req.body
-    if (!email || !username || !password) {
-        return res.status(400).json({ msg: "Invalid email or username or password" });
+    try {
+        const { email, username, password } = req.body
+        if (!email || !username || !password) {
+            return res.status(400).json({ msg: "Invalid email or username or password" });
+        }
+        const user = await UserModel.findOne({ email: email });
+        if (user) {
+            return res.status(400).json({ msg: "User already exists" });
+        }
+        const hashedPassword = await bcrypt.hash(password, UserSalt);
+        const newUser = await UserModel.create({
+            email: email,
+            username: username,
+            password: hashedPassword
+        });
+        return res.status(200).json(newUser);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ msg: "Internal server error" });
     }
-    const user = await UserModel.findOne({ email: email });
-    if (user) {
-        return res.status(400).json({ msg: "User already exists" });
-    }
-    const hashedPassword = await bcrypt.hash(password, UserSalt);
-    const newUser = await UserModel.create({
-        email: email,
-        username: username,
-        password: hashedPassword
-    });
-    return res.status(200).json(newUser);
 })
 
 
@@ -51,7 +56,7 @@ router.post('/login', async (req, res) => {
             secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
             maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days in milliseconds
         });
-        
+
         return res.status(200).json({ msg: "Login success" });
     } catch (err) {
         return res.status(401).json({ error: 'Invalid username or password' });

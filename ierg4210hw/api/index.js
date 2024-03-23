@@ -54,8 +54,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/.well-known/pki-validation/AF6264F6298A321FED6DA700698A6355.txt', (req, res) => {
   // Set the content type as plain text
   res.set('Content-Type', 'text/plain');
-
-  // Send the text file as the response
   res.sendFile(path.join(__dirname, 'public', 'AF6264F6298A321FED6DA700698A6355.txt'));
 });
 

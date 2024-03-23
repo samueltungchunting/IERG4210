@@ -5,19 +5,36 @@ import SignupFormTextField from "./components/signupFormTextField";
 import { signupFormValidationSchema } from "./components/ValidationSchema";
 import { Alert, Snackbar } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 const Register = () => {
   const style = { boxShadow: "0px 0px 12px 2px rgba(0,0,0,0.1)" };
   const [isRegisterFail, setIsRegisterFail] = useState(false);
   const [CSRFToken, setCSRFToken] = useState("");
+  const [isSucess, setIsSucess] = useState(false);
 
   useEffect(() => {
-    setCSRFToken('1234567890')
+    axios.get('/auth/get_csrfToken').then((res) => {
+      // console.log(res.data.csrfToken);
+      setCSRFToken(res.data.csrfToken);
+    });
   }, []);
 
+  if(isSucess) return <Navigate to="/login" />;
+
   const handleRegisterFormSubmit = async (value) => {
-    value.CSRFToken = CSRFToken;
-    console.log(value);
+    value._csrf = CSRFToken
+    // console.log(value);
+    const res = await axios.post("/auth/register", value);
+    console.log(res);
+    if (res.status === 200) {
+      alert("Register success");
+      setTimeout(() => {
+        setIsSucess(true);
+      }, 1000);
+    }
+    // console.log(res.data, new added user);
   };
 
   const handleClose = () => {
@@ -56,6 +73,7 @@ const Register = () => {
           >
             {(props) => (
               <Form className="flex flex-col gap-2">
+                {/* {console.log(props.dirty, props.isValid)} */}
                 <SignupFormTextField
                   placeholder="Username"
                   name="username"

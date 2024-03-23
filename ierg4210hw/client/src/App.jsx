@@ -10,6 +10,7 @@ import ViewProduct from "./pages/view-product/ViewProduct"
 import AddCatagory from "./pages/add-catagory/AddCatagory"
 import Login from "./pages/login/Login"
 import Register from "./pages/register/Register"
+import {UserContextProvider} from './UserContext'
 
 // axios.defaults.baseURL = "https://s15.ierg4210.ie.cuhk.edu.hk:4000"
 axios.defaults.baseURL = "http://localhost:4000"
@@ -18,21 +19,23 @@ axios.defaults.withCredentials = true
 
 const App = () => {
   return (
-    <Routes>
-      <Route path='/' element={<Layout />}>
-        <Route path="/" element={<Main />} />
-        {/* <Route path="/fruits" element={<Main />} /> */}
-        <Route path="/product/:productId" element={<Product />} />
-        <Route path="/add-product" element={<AddProduct />} />
-        <Route path="/add-product/:pid" element={<AddProduct />} />
-        <Route path="/add-catagory" element={<AddCatagory />} />
-        <Route path="/view-products" element={<ViewProduct />} />
-        {/* <Route path="/view-products/edit/:pid" element={<EditViewProduct />} /> */}
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Route>
-    </Routes>
+    <UserContextProvider>
+      <Routes>
+        <Route path='/' element={<Layout />}>
+          <Route path="/" element={<Main />} />
+          {/* <Route path="/fruits" element={<Main />} /> */}
+          <Route path="/product/:productId" element={<Product />} />
+          <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/add-product/:pid" element={<AddProduct />} />
+          <Route path="/add-catagory" element={<AddCatagory />} />
+          <Route path="/view-products" element={<ViewProduct />} />
+          {/* <Route path="/view-products/edit/:pid" element={<EditViewProduct />} /> */}
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+      </Routes>
+    </UserContextProvider>
   )
 }
 
