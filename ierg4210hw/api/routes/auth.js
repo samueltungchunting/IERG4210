@@ -71,7 +71,32 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/change_password', async(req, res) => {
-    
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+        return res.status(400).json({ msg: "Invalid currentPassword or newPassword or confirmNewPassword" });
+    }
+    if (!req.cookies.auth) {
+        return res.status(401).json({ msg: "Not logged in" });
+    }
+
+    const { userInfo } = JSON.parse(req.cookies.auth);
+    const exsitingUser = await UserModel.findOne({ email: userInfo.email });
+
+    if (!exsitingUser) {
+        return res.status(400).json({ msg: "User does not exist" });
+    }
+    const isPasswordCorrect = await bcrypt.compare(currentPassword, exsitingUser.password)
+    if (!isPasswordCorrect) {
+        return res.status(401).json({ msg: "Current password is incorrect" });
+    }
+    if (newPassword !== confirmNewPassword) {
+        return res.status(400).json({ msg: "New password and confirm new password do not match" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, UserSalt);
+    await UserModel.updateOne({ email: userInfo.email }, { password: hashedPassword });
+    res.clearCookie('auth');
+    return res.status(200).json({ msg: "Password updated" });
 })
 
 

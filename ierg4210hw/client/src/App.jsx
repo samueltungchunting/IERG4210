@@ -11,6 +11,7 @@ import ViewProduct from "./pages/view-product/ViewProduct"
 import Login from "./pages/login/Login"
 import Register from "./pages/register/Register"
 import {UserContextProvider} from './UserContext'
+import ChangePassword from "./pages/change-password/ChangePassword"
 
 // axios.defaults.baseURL = "https://s15.ierg4210.ie.cuhk.edu.hk:4000"
 axios.defaults.baseURL = "http://localhost:4000"
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/change-password" element={<ChangePassword />} />
         </Route>
       </Routes>
     </UserContextProvider>

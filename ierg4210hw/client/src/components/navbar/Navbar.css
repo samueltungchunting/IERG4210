@@ -21,6 +21,7 @@
     padding: 0.25rem 1.25rem;
     border-radius: .4rem;
     cursor: pointer;
+    position: relative;
 }
 
 .nav_user:hover {
