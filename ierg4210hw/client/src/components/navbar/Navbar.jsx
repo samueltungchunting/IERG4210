@@ -3,16 +3,18 @@ import "./Navbar.css";
 import { removeFromCart, addToCart, addToCartByQuantity } from "../../features/cart/cartSlice";
 import { Link } from "react-router-dom";
 import CartProduct from "./components/cart-product";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { UserContext } from "../../UserContext";
+import UserActions from "./components/user-actions";
 
 const Navbar = () => {
     const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.totalItems);
     const cartTotalPrice = useSelector((state) => state.cart.totalPrice);
     const cartList = useSelector((state) => state.cart.productList);
+    const [loaded, setLoaded] = useState(false);
 
-    const {user, ready} = useContext(UserContext);
+    const {user} = useContext(UserContext);
 
     useEffect(() => {
         const localStorageCart = cartList.map((item) => {
@@ -23,7 +25,9 @@ const Navbar = () => {
         })
         // console.log(localStorageCart);
         localStorage.setItem("cart", JSON.stringify(localStorageCart));
-    }, [cartList])
+        setLoaded(true)
+    }, [cartList, user])
+
 
     const handleOnQuantityChange = (ev, productId) => {
         const tempQuantity = ev.target.value;
@@ -50,9 +54,14 @@ const Navbar = () => {
     <nav className="navbar">
         <h1 className="navbar_title">IERG Shop</h1>
 
-        {user  && ready &&
+        {user  && loaded ?
             <div>
-                <p className="nav_user">Welcome, {user.email}</p>
+                <p className="nav_user">Welcome, {user.username}</p>
+                <UserActions />
+            </div>
+            :
+            <div>
+                <p>Guest</p>
             </div>
         }
 
@@ -74,7 +83,7 @@ const Navbar = () => {
                 </span>
             </button>
 
-            <section className="navbar_cart_hoverSection">
+            <section className="navbar_cart_hoverSection z-20">
                 <div className="navbar_cart_list">
                     {cartList.map((item) => {
                         const {productId, name, price, quantity, img} = item;

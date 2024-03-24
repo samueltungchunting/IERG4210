@@ -7,7 +7,7 @@ import axios from "axios"
 import AddProduct from "./pages/add-product/AddProduct"
 import ViewProduct from "./pages/view-product/ViewProduct"
 // import EditViewProduct from "./pages/view-product/EditViewProduct"
-import AddCatagory from "./pages/add-catagory/AddCatagory"
+// import AddCatagory from "./pages/add-catagory/AddCatagory"
 import Login from "./pages/login/Login"
 import Register from "./pages/register/Register"
 import {UserContextProvider} from './UserContext'
@@ -27,7 +27,7 @@ const App = () => {
           <Route path="/product/:productId" element={<Product />} />
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/add-product/:pid" element={<AddProduct />} />
-          <Route path="/add-catagory" element={<AddCatagory />} />
+          {/* <Route path="/add-catagory" element={<AddCatagory />} /> */}
           <Route path="/view-products" element={<ViewProduct />} />
           {/* <Route path="/view-products/edit/:pid" element={<EditViewProduct />} /> */}
           <Route path="/checkout" element={<Checkout />} />

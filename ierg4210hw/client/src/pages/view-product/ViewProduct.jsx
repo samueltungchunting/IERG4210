@@ -1,19 +1,33 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import './ViewProduct.css'
 import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { UserContext } from '../../UserContext';
 
 const ViewProduct = () => {
 
     const [allProductList, setAllProductList] = useState([])
+    const [loaded, setLoaded] = useState(false);
+    const {user} = useContext(UserContext)
 
     useEffect(() => {
         axios.get('/product/get_all_products')
         .then((res) => {
           setAllProductList(res.data)
+          setLoaded(true)
+        }).catch((err) => {
+          console.log(err)
+          setLoaded(true)
         })
     }, [])
+
+    if (loaded) {
+        if (!user || user.role !== 'admin') {
+            return <Navigate to='/' />;
+        }
+    }
+
 
     function handleDeleteProduct(pid, pname) {
         const confirmed = window.confirm(`Are you sure you want to delete ${pname}`)

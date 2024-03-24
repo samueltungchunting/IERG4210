@@ -20,8 +20,12 @@ const Login = () => {
   }, [])
 
   if (user) {
-    console.log("User is already logged in");
-    return <Navigate to="/" />;
+    // console.log("User is already logged in", user);
+    if(user.role === 'admin') {
+      return <Navigate to="/view-products" />;
+    } else {
+      return <Navigate to="/" />;
+    }
   }
 
   const loginFormInitialValue = {
@@ -32,13 +36,18 @@ const Login = () => {
   const onLoginFormSubmit = async (values) => {
     values._csrf = csrfToken;
     // console.log(values);
-    const res = await axios.post("/auth/login", values);
-    if (res.status === 200) {
-      setUser(res.data);
-      console.log(res);
-      return;
-    } else {
-      setLoginFail(true);
+    try {
+      const res = await axios.post("/auth/login", values);
+      if (res.status === 200) {
+        axios.get('/auth/get_user_profile').then(({data}) => {
+          setUser(data)
+        })
+
+        return;
+      }
+    } catch (error) {
+        // console.log(error);
+        setLoginFail(true);
     }
   };
 
@@ -114,7 +123,7 @@ const Login = () => {
         </div>
         <Snackbar
           open={loginFail}
-          autoHideDuration={4000}
+          autoHideDuration={3500}
           onClose={handleClose}
           className="fixed bottom-4 left-4"
         >

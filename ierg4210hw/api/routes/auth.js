@@ -27,7 +27,8 @@ router.post('/register', async(req, res) => {
         const newUser = await UserModel.create({
             email: email,
             username: username,
-            password: hashedPassword
+            password: hashedPassword,
+            role: 'user'
         });
         return res.status(200).json(newUser);
     } catch (err) {
@@ -53,6 +54,7 @@ router.post('/login', async (req, res) => {
         const userInfo = {
             email: exsitingUser.email,
             username: exsitingUser.username,
+            role: exsitingUser.role
         }
         const csrfToken = req.csrfToken();
         res.cookie('auth', JSON.stringify({csrfToken, userInfo}), {
@@ -78,10 +80,16 @@ router.get('/get_csrfToken', async(req, res) => {
 })
 
 
-router.get('/logout', async(req, res) => {})
+router.post('/logout', async(req, res) => {
+    if (!req.cookies.auth) {
+        return res.status(401).json({ msg: "Not logged in" });
+    }
+    res.clearCookie('auth'); // Assuming 'auth' is the name of your authentication cookie
+    return res.status(200).json({ msg: "Logout successful" });
+})
 
 
-router.get('/get_user_profile', async(req, res) => {
+router.get('/get_user_profile', async(req, res) => {    
     const auth = req.cookies.auth;
     if (!auth) {
         return res.status(401).json({ msg: "Not logged in" });

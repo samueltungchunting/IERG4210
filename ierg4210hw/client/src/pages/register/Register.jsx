@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import { Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import SignupFormTextField from "./components/signupFormTextField";
 import { signupFormValidationSchema } from "./components/ValidationSchema";
 import { Alert, Snackbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import { UserContext } from "../../UserContext";
 
 const Register = () => {
   const style = { boxShadow: "0px 0px 12px 2px rgba(0,0,0,0.1)" };
@@ -14,12 +15,23 @@ const Register = () => {
   const [CSRFToken, setCSRFToken] = useState("");
   const [isSucess, setIsSucess] = useState(false);
 
+  const { user } = useContext(UserContext);
+
   useEffect(() => {
     axios.get('/auth/get_csrfToken').then((res) => {
       // console.log(res.data.csrfToken);
       setCSRFToken(res.data.csrfToken);
     });
   }, []);
+
+  if (user) {
+    console.log("User is already logged in", user);
+    if(user.role === 'admin') {
+      return <Navigate to="/view-products" />;
+    } else {
+      return <Navigate to="/" />;
+    }
+  }
 
   if(isSucess) return <Navigate to="/login" />;
 

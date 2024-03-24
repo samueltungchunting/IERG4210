@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 // import { Navigate } from 'react-router-dom'
 import './AddProduct.css'
@@ -13,8 +13,9 @@ import CustomTextarea from './components/CustomTextArea';
 import Button from '@mui/material/Button';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
-import { useSearchParams } from 'react-router-dom'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { UserContext } from '../../UserContext';
 
 const AddProduct = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -26,7 +27,9 @@ const AddProduct = () => {
     const [initialFormValues, setInitialFormValues] = useState(null)
     const [image, setImage] = useState(null)
     const [uploadedImage, setUploadedImage] = useState(null)
+    const [loaded, setLoaded] = useState(false)
 
+    const {user} = useContext(UserContext)
 
     useEffect(() => {
         if (pid) {
@@ -47,6 +50,7 @@ const AddProduct = () => {
                     stock: stock,
                 })
                 setImage(photos[0])
+                setLoaded(true)
             })
         } else {
             setInitialFormValues({
@@ -60,8 +64,9 @@ const AddProduct = () => {
         }
         axios.get('/catagory/get_catagories').then((res) => {
             setCatagory(res.data)
+            setLoaded(true)
         })
-    }, [pid, categoryList])
+    }, [pid, categoryList, user])
 
 
     const onDrop = useCallback((acceptedFiles) => {
@@ -83,6 +88,15 @@ const AddProduct = () => {
         },
     })
 
+
+    if(loaded) {
+        // console.log(user, "user");
+        if(!user || user.role !== 'admin') {
+            return <Navigate to='/' />
+        }
+    }
+
+    
     async function handleSubmitAddProductForm(values) {
         // console.log("values", values);
         // console.log("uploadedImage", uploadedImage);
