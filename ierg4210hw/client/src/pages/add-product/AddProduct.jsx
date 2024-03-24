@@ -16,6 +16,7 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import { Navigate, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { UserContext } from '../../UserContext';
+import { addProductValidationSchema } from './ValidationSchema';
 
 const AddProduct = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -107,6 +108,10 @@ const AddProduct = () => {
         formData.append('description', values.description);
         formData.append('stock', values.stock);
         formData.append('photo', uploadedImage);
+
+        // const csrfRes = await axios.get('/auth/get_csrfToken');
+        // const csrfToken = csrfRes.data.csrfToken;
+        // formData.append('_csrfToken', csrfToken);
 
         const {data} = await axios.post('/product/add_product', formData, {
             headers: {'Content-type': 'multipart/form-data'}

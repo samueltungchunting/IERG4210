@@ -1,16 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const { body, validationResult } = require('express-validator');
 
 const UserModel = require('../schema/User');
 
-// bcrypt to hash the pw
-// config the cookie to httpOnly and Secure and expire on 3 days
-// ??? No Session Fixation Vulnerabilities (rotate session id upon successful login) 
+const DEV_MODE = process.env.DEV_MODE;
 
 const UserSalt = bcrypt.genSaltSync(10)
 
-router.post('/register', async(req, res) => {
+router.post('/register', [
+    body('username').isLength({ min: 3, max: 16 }).withMessage('Username should be between 3 and 16 characters'),
+    body('email').isEmail().withMessage('Invalid email').normalizeEmail(),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  ], async(req, res) => {
     // if (req.csrfToken() !== req.body._csrf) {
     //     return res.status(403).send('Invalid CSRF token');
     // }
@@ -38,7 +41,10 @@ router.post('/register', async(req, res) => {
 })
 
 
-router.post('/login', async (req, res) => {
+router.post('/login', [
+    body('email').isEmail().withMessage('Invalid email').normalizeEmail(),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  ], async (req, res) => {
     const { email, password } = req.body;
     const exsitingUser = await UserModel.findOne({ email: email });
     if (!exsitingUser) {
@@ -51,26 +57,35 @@ router.post('/login', async (req, res) => {
                 : 'Invalid username or password' });
         }
 
-        const userInfo = {
-            email: exsitingUser.email,
-            username: exsitingUser.username,
-            role: exsitingUser.role
-        }
-        const csrfToken = req.csrfToken();
-        res.cookie('auth', JSON.stringify({csrfToken, userInfo}), {
-            httpOnly: true,
-            secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-            maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days in milliseconds
-        });
-
-        return res.status(200).json({ msg: "Login success" });
+        req.session.regenerate((err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Session regeneration failed' });
+            }
+            const userInfo = {
+                email: exsitingUser.email,
+                username: exsitingUser.username,
+                role: exsitingUser.role
+            }
+            const csrfToken = req.csrfToken();
+            res.cookie('auth', JSON.stringify({csrfToken, userInfo}), {
+                httpOnly: true,
+                secure: DEV_MODE === "DEV" ? req.secure || req.headers['x-forwarded-proto'] === 'https' : true,
+                maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days in milliseconds
+            });
+    
+            return res.status(200).json({ msg: "Login success" });
+        })
     } catch (err) {
+        console.log(err);
         return res.status(401).json({ error: 'Invalid username or password' });
     }
 })
 
 
-router.post('/change_password', async(req, res) => {
+router.post('/change_password', [
+    body('currentPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('newPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  ], async(req, res) => {
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
     if (!currentPassword || !newPassword || !confirmNewPassword) {
         return res.status(400).json({ msg: "Invalid currentPassword or newPassword or confirmNewPassword" });
@@ -96,6 +111,7 @@ router.post('/change_password', async(req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, UserSalt);
     await UserModel.updateOne({ email: userInfo.email }, { password: hashedPassword });
     res.clearCookie('auth');
+    req.session.destroy(); // Destroy the session
     return res.status(200).json({ msg: "Password updated" });
 })
 
@@ -110,6 +126,7 @@ router.post('/logout', async(req, res) => {
         return res.status(401).json({ msg: "Not logged in" });
     }
     res.clearCookie('auth'); // Assuming 'auth' is the name of your authentication cookie
+    req.session.destroy(); // Destroy the session
     return res.status(200).json({ msg: "Logout successful" });
 })
 

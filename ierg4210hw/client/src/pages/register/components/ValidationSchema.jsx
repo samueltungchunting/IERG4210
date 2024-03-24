@@ -1,7 +1,10 @@
 import * as Yup from "yup";
 
 export const signupFormValidationSchema = Yup.object().shape({
-  username: Yup.string().required("Username is required").max(16, "Username should be less than 16 characters"),
+  username: Yup.string()
+  .min(3, "Username should be at least 3 characters")
+  .required("Username is required")
+  .max(16, "Username should be less than 16 characters"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")

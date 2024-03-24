@@ -9,9 +9,16 @@ const fs = require("fs")
 const PORT = 4000;
 require('dotenv').config();
 const path = require('path');
+const session = require('express-session');
 
 // middleware / routes
 const cors = require('cors');
+app.use(session({
+    secret: 'your_secret_key', // Replace with a strong secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true } // You can configure cookie options here
+}));
 const productRoutes = require('./routes/product');
 const catagoryRoutes = require('./routes/catagory');
 const authRoutes = require('./routes/auth');
@@ -24,6 +31,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(csrfProtection);
+
 
 const DevMode = process.env.DEV_MODE
 app.use(cors({

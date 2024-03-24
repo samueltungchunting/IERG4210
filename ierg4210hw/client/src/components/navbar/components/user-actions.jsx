@@ -20,6 +20,13 @@ const UserActions = () => {
 
   return (
     <div className="bg-gray-100 shadow-md rounded-xl px-4 py-8 hidden group-hover:flex flex-col gap-3 w-48 rounded-tr-none">
+        {user && user.role === 'admin' &&
+            <Link to='/view-products'>
+                <button className="bg-secondary py-1 px-2 rounded-lg w-full">
+                    Panel
+                </button>
+            </Link>
+        }
         {user ?
             <button 
                 className="bg-red-200 py-1 px-2 rounded-lg w-full"
@@ -34,10 +41,10 @@ const UserActions = () => {
                 </button>
             </Link>
         }
-        {user && user.role === 'admin' &&
-            <Link to='/view-products'>
-                <button className="bg-secondary py-1 px-2 rounded-lg w-full">
-                    Panel
+        {user && 
+            <Link to='/change-password'>
+                <button className="bg-primary py-1 px-2 rounded-lg w-full">
+                    Change Password
                 </button>
             </Link>
         }

@@ -5,6 +5,7 @@ const ProductModel = require('../schema/Product');
 const CatagoryModel = require('../schema/Catagory');
 const { uploadFileToS3, getFileFromS3, deleteFileFromS3 } = require('./s3');
 const crypto = require('crypto');
+const { body, validationResult } = require('express-validator');
 
 
 function randomImageName(bytes = 32) {
@@ -65,18 +66,31 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 router.post('/add_product', upload.single('photo'), async (req, res) => {
-    const { catagory, name, price, description, stock } = req.body;
-    const files = req.file;
-    const randomImgName = randomImageName();
-    const catagoryId = await CatagoryModel.find({name: catagory});
-    // console.log(files);
-    // console.log(catagoryId[0]['cid']);
-    const latestProduct = await ProductModel.findOne().sort({ pid: -1 });
-    const nextPid = isNaN(latestProduct?.pid) ? 1 : latestProduct.pid + 1;
-    const addedProduct = await ProductModel.create({ pid: nextPid, cid: catagoryId[0]['cid'], name, price, description, stock, photos: randomImgName});
-    await uploadFileToS3(files, randomImgName)
-
-    res.json({});
+    try {
+        const { category, name, price, description, stock } = req.body;
+        // if (!_csrfToken || _csrfToken !== req.csrfToken()) {
+        //   throw new Error('Invalid CSRF token');
+        // }
+    
+        const categoryId = await CategoryModel.findOne({ name: category }).select('_id');
+        const latestProduct = await ProductModel.findOne().sort({ pid: -1 }).select('pid');
+        const nextPid = latestProduct ? latestProduct.pid + 1 : 1;
+    
+        const addedProduct = await ProductModel.create({
+          pid: nextPid,
+          cid: categoryId,
+          name,
+          price,
+          description,
+          stock,
+          photos: randomImageName(),
+        });
+    
+        await uploadFileToS3(req.file, addedProduct.photos);
+        res.json({ message: 'Product added successfully' });
+      } catch (error) {
+        res.status(403).json({ error: error.message });
+      }
 });
 
 

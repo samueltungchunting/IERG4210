@@ -56,7 +56,7 @@ const Navbar = () => {
 
         {user  && loaded ?
             <div>
-                <p className="nav_user"><span className="font-semibold">Welcome</span>, {user.username}</p>
+                <p className="nav_user"><span className="font-semibold">Welcome</span>, {user.username}({user.role})</p>
             </div>
             :
             <div>
