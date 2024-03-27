@@ -65,12 +65,22 @@ router.get('/get_product/:pid', async (req, res) => {
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
+// , [
+//     body('category').isString().notEmpty().withMessage('Category is required'),
+//     body('name').isString().notEmpty().withMessage('Name is required'),
+//     body('price').isNumeric().notEmpty().withMessage('Price is required').isFloat({ gt: 0 }).withMessage('Price must be a positive number'),
+//     body('photo').notEmpty().withMessage('Photo is required'),
+
+//     body('description').isString().notEmpty().withMessage('Description is required').isLength({ max: 1000 }).withMessage('Description must be less than 1000 characters'),
+//     body('stock').isInt({ gt: 0 }).withMessage('Stock must be a positive integer').notEmpty().withMessage('Stock is required'),
+//   ]
 router.post('/add_product', upload.single('photo'), async (req, res) => {
     try {
-        const { category, name, price, description, stock } = req.body;
+        const { category, name, price, description, stock, _csrf } = req.body;
         // if (!_csrfToken || _csrfToken !== req.csrfToken()) {
         //   throw new Error('Invalid CSRF token');
         // }
+        console.log('_csrf', _csrf);
     
         const categoryId = await CategoryModel.findOne({ name: category }).select('_id');
         const latestProduct = await ProductModel.findOne().sort({ pid: -1 }).select('pid');
@@ -89,7 +99,8 @@ router.post('/add_product', upload.single('photo'), async (req, res) => {
         await uploadFileToS3(req.file, addedProduct.photos);
         res.json({ message: 'Product added successfully' });
       } catch (error) {
-        res.status(403).json({ error: error.message });
+        // res.status(403).json({ error: error.message });
+        console.log(error);
       }
 });
 

@@ -109,17 +109,20 @@ const AddProduct = () => {
         formData.append('stock', values.stock);
         formData.append('photo', uploadedImage);
 
-        // const csrfRes = await axios.get('/auth/get_csrfToken');
-        // const csrfToken = csrfRes.data.csrfToken;
-        // formData.append('_csrfToken', csrfToken);
+        const csrfRes = await axios.get('/auth/get_csrfToken');
+        const csrfToken = csrfRes.data.csrfToken;
+        // console.log(csrfToken, "csrfToken");
+        formData.append('_csrf', csrfToken);
+        // console.log(formData, "formData");
 
         const {data} = await axios.post('/product/add_product', formData, {
             headers: {'Content-type': 'multipart/form-data'}
         })
-        if(data) {
-            alert('Product added successfully')
-            // return <Navigate to='/admin/view-products' />
-        }
+        // if(data) {
+        //     alert('Product added successfully')
+        //     // return <Navigate to='/admin/view-products' />
+        // }
+        // console.log(data);
     }
 
     async function handleAddNewCatagory() {
